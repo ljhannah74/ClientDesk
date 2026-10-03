@@ -77,7 +77,7 @@ export async function deleteCustomer(
 
     if (!response.ok) {
         throw new Error(
-            "Failed to delete customer."
+            `Failed to delete customer: ${response.status}`
         );
     }
 }

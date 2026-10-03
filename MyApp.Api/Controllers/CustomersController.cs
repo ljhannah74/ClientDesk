@@ -73,4 +73,21 @@ public class CustomersController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var customer = await _context.Customers.FindAsync(id);
+
+        if (customer == null)
+        {
+            return NotFound();
+        }
+
+        _context.Customers.Remove(customer);
+
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 }

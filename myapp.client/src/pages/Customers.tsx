@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
 import type { ColDef, RowSelectionOptions, SelectionChangedEvent } from "ag-grid-community";
-import CustomerDialog, {type CustomerFormData } from "../components/CustomerDialog";
+import CustomerDialog, { type CustomerFormData } from "../components/CustomerDialog";
 
-import { createCustomer, getCustomers, updateCustomer } from "../api/customersApi";
+import { createCustomer, getCustomers, updateCustomer, deleteCustomer } from "../api/customersApi";
 import type { Customer } from "../types/Customer";
 
 export default function Customers() {
@@ -14,6 +14,14 @@ export default function Customers() {
     const [addDialogOpen, setAddDialogOpen] = useState(false);
     const [editDialogOpen, setEditDialogOpen] =
         useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] =
+        useState(false);
+
+    const [deleting, setDeleting] =
+        useState(false);
+
+    const [deleteError, setDeleteError] =
+        useState<string | null>(null);
 
     const columnDefs = useMemo<ColDef<Customer>[]>(() => [
         {
@@ -97,6 +105,36 @@ export default function Customers() {
         setSelectedCustomer(null);
     }
 
+    async function handleDeleteCustomer() {
+        if (!selectedCustomer) {
+            return;
+        }
+
+        try {
+            setDeleting(true);
+            setDeleteError(null);
+
+            await deleteCustomer(
+                selectedCustomer.id
+            );
+
+            setDeleteDialogOpen(false);
+            setSelectedCustomer(null);
+
+            await loadCustomers();
+        } catch (error) {
+            console.error(
+                "Unable to delete customer:",
+                error
+            );
+
+            setDeleteError(
+                "Unable to delete customer."
+            );
+        } finally {
+            setDeleting(false);
+        }
+    }
 
     return (
         <div className="customers-page">
@@ -109,16 +147,20 @@ export default function Customers() {
                 <button type="button"
                     onClick={() => setAddDialogOpen(true)}
                 >
-                    Add Customer
+                    Add
                 </button>
 
                 <button type="button" disabled={!selectedCustomer}
                     onClick={() => setEditDialogOpen(true)}>
-                    Edit Customer
+                    Edit
                 </button>
 
-                <button type="button" disabled={!selectedCustomer}>
-                    Delete Customer
+                <button type="button" disabled={!selectedCustomer}
+                    onClick={() => {
+                        setDeleteError(null);
+                        setDeleteDialogOpen(true);
+                    }}>
+                    Delete
                 </button>
             </div>
 
@@ -153,6 +195,54 @@ export default function Customers() {
                     setEditDialogOpen(false)
                 }
             />
+            {deleteDialogOpen && selectedCustomer && (
+                <div className="dialog-backdrop">
+                    <div className="dialog">
+                        <h2>Delete Customer</h2>
+
+                        <p>
+                            Are you sure you want to delete{" "}
+                            <strong>
+                                {selectedCustomer.name}
+                            </strong>
+                            ?
+                        </p>
+
+                        <p>
+                            This action cannot be undone.
+                        </p>
+
+                        {deleteError && (
+                            <div className="dialog-error">
+                                {deleteError}
+                            </div>
+                        )}
+
+                        <div className="dialog-actions">
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    setDeleteDialogOpen(false)
+                                }
+                                disabled={deleting}
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                type="button"
+                                onClick={handleDeleteCustomer}
+                                disabled={deleting}
+                            >
+                                {deleting
+                                    ? "Deleting..."
+                                    : "Delete"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
+
     );
 }
