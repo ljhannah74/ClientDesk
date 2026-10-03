@@ -1,0 +1,175 @@
+# ============================================================
+# MyApp
+# ASP.NET Core + EF Core + SQLite + React/Vite + Electron
+# ============================================================
+
+
+# ------------------------------------------------------------
+# .NET / Visual Studio
+# ------------------------------------------------------------
+
+**/bin/
+**/obj/
+
+.vs/
+.vscode/
+.idea/
+
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+_ReSharper*/
+*.DotSettings.user
+
+TestResults/
+*.trx
+coverage/
+coverage.*
+
+
+# ------------------------------------------------------------
+# .NET Publish Output
+# ------------------------------------------------------------
+
+publish/
+**/publish/
+
+
+# ------------------------------------------------------------
+# SQLite
+# ------------------------------------------------------------
+
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Development database/data directory used by Electron
+dev-data/
+
+
+# ------------------------------------------------------------
+# Node / npm
+# ------------------------------------------------------------
+
+**/node_modules/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+.npm/
+.pnpm-store/
+
+
+# ------------------------------------------------------------
+# Vite / React
+# ------------------------------------------------------------
+
+myapp.client/dist/
+**/.vite/
+
+*.local
+
+
+# ------------------------------------------------------------
+# Electron / electron-builder
+# ------------------------------------------------------------
+
+myapp.client/release/
+
+*.AppImage
+*.snap
+*.deb
+*.rpm
+
+*.exe
+*.msi
+*.dmg
+*.pkg
+
+builder-debug.yml
+builder-effective-config.yaml
+latest*.yml
+
+
+# ------------------------------------------------------------
+# Environment / Secrets
+# ------------------------------------------------------------
+
+.env
+.env.*
+!.env.example
+
+appsettings.Development.local.json
+appsettings.Local.json
+
+*.pfx
+*.p12
+*.pem
+*.key
+
+
+# ------------------------------------------------------------
+# Operating System Files
+# ------------------------------------------------------------
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+Desktop.ini
+$RECYCLE.BIN/
+
+
+# ------------------------------------------------------------
+# Temporary / Backup Files
+# ------------------------------------------------------------
+
+*.tmp
+*.temp
+*.bak
+*.backup
+*.swp
+*.swo
+
+.cache/
+tmp/
+temp/
+
+
+# ------------------------------------------------------------
+# Logs
+# ------------------------------------------------------------
+
+*.log
+logs/
+
+
+# ------------------------------------------------------------
+# TypeScript
+# ------------------------------------------------------------
+
+*.tsbuildinfo
+
+
+# ------------------------------------------------------------
+# Electron crash dumps
+# ------------------------------------------------------------
+
+crashpad/
+Crashpad/
