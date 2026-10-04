@@ -84,6 +84,11 @@ public class CustomersController : ControllerBase
             return NotFound();
         }
 
+        if (await _context.Orders.AnyAsync(x => x.CustomerId == id))
+        {
+            return Conflict("Customer has orders and cannot be deleted.");
+        }
+
         _context.Customers.Remove(customer);
 
         await _context.SaveChangesAsync();

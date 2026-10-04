@@ -4,3 +4,43 @@ GET {{MyApp.Api_HostAddress}}/weatherforecast/
 Accept: application/json
 
 ###
+
+POST {{MyApp.Api_HostAddress}}/api/orders
+Content-Type: application/json
+
+{
+  "orderNumber": "ORD-1001",
+  "orderDate": "2026-10-04T10:00:00Z",
+  "customerId": 1,
+  "description": "First order",
+  "status": "New"
+}
+
+###
+
+GET {{MyApp.Api_HostAddress}}/api/orders?customerId=1
+Accept: application/json
+
+###
+
+GET {{MyApp.Api_HostAddress}}/api/orders/1
+Accept: application/json
+
+###
+
+PUT {{MyApp.Api_HostAddress}}/api/orders/1
+Content-Type: application/json
+
+{
+  "orderNumber": "ORD-1001",
+  "orderDate": "2026-10-04T10:00:00Z",
+  "customerId": 1,
+  "description": "Updated",
+  "status": "Processing"
+}
+
+###
+
+DELETE {{MyApp.Api_HostAddress}}/api/orders/1
+
+###

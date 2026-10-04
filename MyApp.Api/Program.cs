@@ -3,7 +3,12 @@ using MyApp.Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
 var appDataPath =
     Environment.GetEnvironmentVariable("APP_DATA_PATH");
 
