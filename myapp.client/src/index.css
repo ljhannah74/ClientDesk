@@ -93,7 +93,8 @@ body,
     color: #555;
 }
 
-.customers-page {
+.customers-page,
+.orders-page {
     width: 100%;
 }
 
@@ -141,7 +142,8 @@ button:hover {
     color: #a00;
 }
 
-.customers-grid {
+.customers-grid,
+.orders-grid {
     width: 100%;
     height: 500px;
 }
@@ -195,14 +197,16 @@ button:disabled {
     font-weight: 600;
 }
 
-.form-field input {
+.form-field input,
+.form-field select {
     padding: 9px 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font: inherit;
 }
 
-.form-field input:focus {
+.form-field input:focus,
+.form-field select:focus {
     outline: 2px solid #aaa;
     outline-offset: 1px;
 }

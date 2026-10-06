@@ -15,6 +15,10 @@ export default function Sidebar() {
                 <NavLink to="/customers">
                     Customers
                 </NavLink>
+
+                <NavLink to="/orders">
+                    Orders
+                </NavLink>
             </nav>
         </aside>
     );

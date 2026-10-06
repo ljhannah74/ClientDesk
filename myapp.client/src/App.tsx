@@ -7,6 +7,7 @@ import {
 import AppLayout from "./components/AppLayout";
 import Dashboard from "./pages/Dashboard";
 import Customers from "./pages/Customers";
+import Orders from "./pages/Orders";
 
 export default function App() {
     return (
@@ -17,6 +18,10 @@ export default function App() {
                     <Route
                         path="/customers"
                         element={<Customers />}
+                    />
+                    <Route
+                        path="/orders"
+                        element={<Orders />}
                     />
                 </Route>
             </Routes>
