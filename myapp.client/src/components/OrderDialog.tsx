@@ -1,16 +1,26 @@
 import { useState } from "react";
 import type { Customer } from "../types/Customer";
+import type { Product } from "../types/Product";
 import type { Order, OrderRequest, OrderStatus } from "../types/Order";
 
 interface OrderDialogProps {
     open: boolean;
     customers: Customer[];
+    products: Product[];
     order?: Order | null;
     onSave: (request: OrderRequest) => Promise<void>;
     onCancel: () => void;
 }
 
 type OrderDialogFormProps = Omit<OrderDialogProps, "open">;
+
+interface OrderItemDraft {
+    key: string;
+    id?: number;
+    productId: number | null;
+    quantity: number;
+    unitPrice: number;
+}
 
 const statuses: OrderStatus[] = [
     "New",
@@ -31,6 +41,16 @@ function currentLocalDateTime(): string {
     return toLocalDateTime(new Date().toISOString());
 }
 
+function orderItemDrafts(order?: Order | null): OrderItemDraft[] {
+    return order?.items.map((item) => ({
+        key: `item-${item.id}`,
+        id: item.id,
+        productId: item.productId,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+    })) ?? [];
+}
+
 export default function OrderDialog({
     open,
     ...props
@@ -49,6 +69,7 @@ export default function OrderDialog({
 
 function OrderDialogForm({
     customers,
+    products,
     order,
     onSave,
     onCancel,
@@ -60,6 +81,7 @@ function OrderDialogForm({
     const [customerId, setCustomerId] = useState(order ? String(order.customerId) : "");
     const [description, setDescription] = useState(order?.description ?? "");
     const [status, setStatus] = useState<OrderStatus>(order?.status ?? "New");
+    const [items, setItems] = useState<OrderItemDraft[]>(() => orderItemDrafts(order));
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -81,6 +103,18 @@ function OrderDialogForm({
             return;
         }
 
+        if (items.some((item) => !item.productId
+            || !Number.isInteger(item.quantity)
+            || item.quantity < 1)) {
+            setError("Each product line needs a product and a positive whole-number quantity.");
+            return;
+        }
+
+        if (new Set(items.map((item) => item.productId)).size !== items.length) {
+            setError("A product can only appear once on an order.");
+            return;
+        }
+
         try {
             setSaving(true);
             setError(null);
@@ -91,6 +125,11 @@ function OrderDialogForm({
                 customerId: Number(customerId),
                 description: description.trim() || null,
                 status,
+                items: items.map(({ id, productId, quantity }) => ({
+                    ...(id === undefined ? {} : { id }),
+                    productId: productId!,
+                    quantity,
+                })),
             });
         } catch (saveError) {
             console.error(saveError);
@@ -104,7 +143,7 @@ function OrderDialogForm({
 
     return (
         <div className="dialog-backdrop">
-            <div className="dialog">
+            <div className="dialog order-dialog">
                 <h2>{order ? "Edit Order" : "Add Order"}</h2>
 
                 {customers.length === 0 ? (
@@ -178,6 +217,120 @@ function OrderDialogForm({
                                     <option key={value} value={value}>{value}</option>
                                 ))}
                             </select>
+                        </div>
+
+                        <div className="order-items-section">
+                            <div className="order-items-heading">
+                                <h3>Products</h3>
+                                <button
+                                    type="button"
+                                    onClick={() => setItems((current) => [...current, {
+                                        key: crypto.randomUUID(),
+                                        productId: null,
+                                        quantity: 1,
+                                        unitPrice: 0,
+                                    }])}
+                                    disabled={products.length === 0}
+                                >
+                                    Add product line
+                                </button>
+                            </div>
+
+                            {products.length === 0 && (
+                                <p>No products are available for order lines.</p>
+                            )}
+
+                            {items.length > 0 && (
+                                <div className="order-items-table">
+                                    <div className="order-item-labels">
+                                        <span>Product</span>
+                                        <span>Quantity</span>
+                                        <span>Unit price</span>
+                                        <span>Line total</span>
+                                        <span></span>
+                                    </div>
+                                    {items.map((item) => {
+                                        const selectedProduct = products.find(
+                                            (product) => product.id === item.productId
+                                        );
+                                        const availableProducts = products.filter(
+                                            (product) => product.isActive
+                                                || product.id === item.productId
+                                        );
+
+                                        return (
+                                            <div className="order-item-row" key={item.key}>
+                                                <select
+                                                    aria-label="Product"
+                                                    value={item.productId?.toString() ?? ""}
+                                                    onChange={(event) => {
+                                                        const productId = Number(event.target.value) || null;
+                                                        const product = products.find(
+                                                            (value) => value.id === productId
+                                                        );
+                                                        setItems((current) => current.map((value) =>
+                                                            value.key === item.key
+                                                                ? {
+                                                                    ...value,
+                                                                    productId,
+                                                                    unitPrice: product?.unitPrice ?? 0,
+                                                                }
+                                                                : value
+                                                        ));
+                                                    }}
+                                                >
+                                                    <option value="">Select product</option>
+                                                    {availableProducts.map((product) => (
+                                                        <option key={product.id} value={product.id}>
+                                                            {product.sku} - {product.name}
+                                                            {!product.isActive ? " (Inactive)" : ""}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <input
+                                                    aria-label="Quantity"
+                                                    type="number"
+                                                    min="1"
+                                                    step="1"
+                                                    value={item.quantity}
+                                                    onChange={(event) => {
+                                                        const quantity = Number(event.target.value);
+                                                        setItems((current) => current.map((value) =>
+                                                            value.key === item.key
+                                                                ? { ...value, quantity }
+                                                                : value
+                                                        ));
+                                                    }}
+                                                />
+                                                <span>{item.unitPrice.toFixed(2)}</span>
+                                                <span>{(item.quantity * item.unitPrice).toFixed(2)}</span>
+                                                <button
+                                                    type="button"
+                                                    aria-label="Remove product line"
+                                                    onClick={() => setItems((current) =>
+                                                        current.filter((value) => value.key !== item.key)
+                                                    )}
+                                                >
+                                                    Remove
+                                                </button>
+                                                {selectedProduct && !selectedProduct.isActive && (
+                                                    <span className="order-item-inactive">
+                                                        Existing inactive product; price snapshot retained unless changed.
+                                                    </span>
+                                                )}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            )}
+
+                            <div className="order-total">
+                                <strong>Order total</strong>
+                                <strong>{items.reduce(
+                                    (total, item) => total + item.quantity * item.unitPrice,
+                                    0
+                                ).toFixed(2)}</strong>
+                            </div>
                         </div>
 
                         {error && <div className="dialog-error">{error}</div>}

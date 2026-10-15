@@ -8,6 +8,7 @@ import AppLayout from "./components/AppLayout";
 import Dashboard from "./pages/Dashboard";
 import Customers from "./pages/Customers";
 import Orders from "./pages/Orders";
+import Products from "./pages/Products";
 
 export default function App() {
     return (
@@ -22,6 +23,10 @@ export default function App() {
                     <Route
                         path="/orders"
                         element={<Orders />}
+                    />
+                    <Route
+                        path="/products"
+                        element={<Products />}
                     />
                 </Route>
             </Routes>

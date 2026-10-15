@@ -2,19 +2,21 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MyApp.Api.Models;
 
-public class OrderRequest
+public sealed record OrderRequest
 {
     [Required]
     [StringLength(50)]
-    public string OrderNumber { get; set; } = string.Empty;
+    public required string OrderNumber { get; init; }
 
-    public DateTime OrderDate { get; set; }
+    public DateTimeOffset OrderDate { get; init; }
 
-    public int CustomerId { get; set; }
+    public int CustomerId { get; init; }
 
     [StringLength(500)]
-    public string? Description { get; set; }
+    public string? Description { get; init; }
 
     [AllowedValues("New", "Processing", "Completed", "Cancelled")]
-    public string Status { get; set; } = "New";
+    public string Status { get; init; } = "New";
+
+    public IReadOnlyList<OrderItemRequest>? Items { get; init; }
 }

@@ -20,4 +20,6 @@ public class Order
     public string? Description { get; set; }
 
     public string Status { get; set; } = "New";
+
+    public ICollection<OrderItem> Items { get; set; } = new List<OrderItem>();
 }

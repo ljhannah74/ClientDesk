@@ -13,7 +13,13 @@ Content-Type: application/json
   "orderDate": "2026-10-04T10:00:00Z",
   "customerId": 1,
   "description": "First order",
-  "status": "New"
+  "status": "New",
+  "items": [
+    {
+      "productId": 1,
+      "quantity": 2
+    }
+  ]
 }
 
 ###
@@ -36,11 +42,58 @@ Content-Type: application/json
   "orderDate": "2026-10-04T10:00:00Z",
   "customerId": 1,
   "description": "Updated",
-  "status": "Processing"
+  "status": "Processing",
+  "items": [
+    {
+      "id": 1,
+      "productId": 1,
+      "quantity": 3
+    }
+  ]
 }
 
 ###
 
 DELETE {{MyApp.Api_HostAddress}}/api/orders/1
+
+###
+
+GET {{MyApp.Api_HostAddress}}/api/products
+Accept: application/json
+
+###
+
+POST {{MyApp.Api_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Wireless Mouse",
+  "description": "Ergonomic wireless mouse",
+  "sku": "MOUSE-001",
+  "unitPrice": 29.99,
+  "isActive": true
+}
+
+###
+
+GET {{MyApp.Api_HostAddress}}/api/products/1
+Accept: application/json
+
+###
+
+PUT {{MyApp.Api_HostAddress}}/api/products/1
+Content-Type: application/json
+
+{
+  "name": "Wireless Mouse",
+  "description": "Updated description",
+  "sku": "MOUSE-001",
+  "unitPrice": 31.50,
+  "isActive": true
+}
+
+###
+
+DELETE {{MyApp.Api_HostAddress}}/api/products/1
 
 ###

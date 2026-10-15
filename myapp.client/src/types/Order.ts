@@ -4,14 +4,30 @@ export type OrderStatus =
     | "Completed"
     | "Cancelled";
 
+export interface OrderItem {
+    id: number;
+    productId: number;
+    productName: string;
+    quantity: number;
+    unitPrice: number;
+    lineTotal: number;
+}
+
 export interface Order {
     id: number;
     orderNumber: string;
     orderDate: string;
     customerId: number;
-    customer: null;
     description: string | null;
     status: OrderStatus;
+    items: OrderItem[];
+    total: number;
+}
+
+export interface OrderItemRequest {
+    id?: number;
+    productId: number;
+    quantity: number;
 }
 
 export interface OrderRequest {
@@ -20,4 +36,5 @@ export interface OrderRequest {
     customerId: number;
     description: string | null;
     status: OrderStatus;
+    items: OrderItemRequest[];
 }

@@ -8,12 +8,15 @@ import type {
 import OrderDialog from "../components/OrderDialog";
 import { createOrder, deleteOrder, getOrders, updateOrder } from "../api/ordersApi";
 import { getCustomers } from "../api/customersApi";
+import { getProducts } from "../api/productsApi";
 import type { Customer } from "../types/Customer";
+import type { Product } from "../types/Product";
 import type { Order, OrderRequest } from "../types/Order";
 
 export default function Orders() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [customers, setCustomers] = useState<Customer[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -45,7 +48,17 @@ export default function Orders() {
                 ? customerNames.get(params.data.customerId) ?? "Unknown customer"
                 : "",
         },
-        { field: "description", headerName: "Description", flex: 1 },
+        {
+            headerName: "Lines",
+            width: 110,
+            valueGetter: (params) => params.data?.items.length ?? 0,
+        },
+        {
+            field: "total",
+            headerName: "Total",
+            width: 140,
+            valueFormatter: (params) => Number(params.value ?? 0).toFixed(2),
+        },
         { field: "status", headerName: "Status", width: 150 },
     ], [customerNames]);
 
@@ -69,12 +82,14 @@ export default function Orders() {
         try {
             setLoading(true);
             setError(null);
-            const [orderData, customerData] = await Promise.all([
+            const [orderData, customerData, productData] = await Promise.all([
                 getOrders(),
                 getCustomers(),
+                getProducts(),
             ]);
             setOrders(orderData);
             setCustomers(customerData);
+            setProducts(productData);
         } catch (loadError) {
             console.error(loadError);
             setError(loadError instanceof Error
@@ -188,12 +203,14 @@ export default function Orders() {
             <OrderDialog
                 open={addDialogOpen}
                 customers={customers}
+                products={products}
                 onSave={handleAddOrder}
                 onCancel={() => setAddDialogOpen(false)}
             />
             <OrderDialog
                 open={editDialogOpen}
                 customers={customers}
+                products={products}
                 order={selectedOrder}
                 onSave={handleEditOrder}
                 onCancel={() => setEditDialogOpen(false)}

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MyApp.Api.Data;
+using MyApp.Api.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,9 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.ReferenceHandler =
             System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
+builder.Services.AddOpenApi();
+builder.Services.AddProblemDetails();
+builder.Services.AddScoped<IProductService, ProductService>();
 var appDataPath =
     Environment.GetEnvironmentVariable("APP_DATA_PATH");
 
@@ -40,6 +44,11 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
 
 using (var scope = app.Services.CreateScope())
 {
