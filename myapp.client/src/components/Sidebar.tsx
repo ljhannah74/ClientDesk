@@ -4,7 +4,7 @@ export default function Sidebar() {
     return (
         <aside className="sidebar">
             <div className="sidebar-title">
-                MyApp
+                ClientDesk
             </div>
 
             <nav>
