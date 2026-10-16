@@ -2,7 +2,7 @@ export default function Toolbar() {
     return (
         <header className="toolbar">
             <div className="toolbar-title">
-                My Application
+                ClientDesk
             </div>
 
             <div className="toolbar-actions">

@@ -19,7 +19,7 @@
   },
   "build": {
     "appId": "com.example.myapp",
-    "productName": "MyApp",
+    "productName": "ClientDesk",
     "directories": {
       "output": "release"
     },

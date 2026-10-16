@@ -1,8 +1,8 @@
-# Customer & Order Manager
+# ClientDesk — Customer & Order Manager
 
 A full-stack customer and order management application built with React, TypeScript, ASP.NET Core, and SQLite. The project demonstrates relational business workflows, API integration, validation, and recovery from failed requests.
 
-The repository and application identifiers currently use **MyApp**. This README uses Customer & Order Manager as a descriptive project title.
+ClientDesk manages customers and their orders in a React interface backed by a C# API. Internal project names and the repository URL still use **MyApp**.
 
 ## Features
 
@@ -134,7 +134,7 @@ The API creates `myapp.db` and applies checked-in migrations automatically. A se
 | --- | --- |
 | API launched directly | Application output directory, normally `MyApp.Api/bin/Debug/net10.0/myapp.db` for the development command above |
 | Electron development | Repository root's `dev-data/myapp.db` |
-| Packaged Electron | Electron's platform-specific user-data directory |
+| Packaged Electron | The existing `MyApp` folder under Electron's platform-specific application-data directory |
 
 For a directly launched API, set `APP_DATA_PATH` to use a stable location across build configurations:
 
@@ -144,6 +144,8 @@ dotnet run --project .\MyApp.Api\MyApp.Api.csproj --launch-profile http
 ```
 
 Set this in the API terminal before launch. Electron sets its own data path. Browser and Electron modes use different databases by default, so their record lists may differ.
+
+The ClientDesk display-name change preserves the existing `MyApp` desktop data folder, `dev-data/`, and `myapp.db` filename. No database migration or copying is required.
 
 Database files and `dev-data/` are ignored by Git. Back up the database before changing its schema; startup migrations are intended for local development.
 
@@ -244,5 +246,5 @@ Inspect results under **Actions → CI** or the pull request's **Checks** tab. L
 
 This is a local development and portfolio project. Authentication and authorization are not implemented; use fictional records.
 
-Next improvements are broader order UI and end-to-end tests, screenshots from the running application, improved order error classification, and verified Electron packaging. Order database-update failures currently share a duplicate-order-number response, and concurrent changes need more robust handling.
+Next improvements are broader order UI and end-to-end tests, refreshed screenshots showing ClientDesk branding, improved order error classification, and verified Electron packaging. Order database-update failures currently share a duplicate-order-number response, and concurrent changes need more robust handling.
 
