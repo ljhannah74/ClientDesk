@@ -17,6 +17,31 @@ The repository and application identifiers currently use **MyApp**. This README 
 - Persist records in SQLite, with EF Core migrations applied at startup.
 - Run the React interface in a browser, with an additional Electron desktop shell.
 
+### Main Customers Screen
+
+<img width="1365" height="714" alt="image" src="https://github.com/user-attachments/assets/17607e07-38e9-40cf-9fb5-48e92416b290" />
+
+### Main Orders Screen
+
+<img width="1345" height="717" alt="image" src="https://github.com/user-attachments/assets/b6050fd9-9467-4289-b6b5-dbbde736706d" />
+
+### Edit Customer Dialog
+
+<img width="437" height="307" alt="image" src="https://github.com/user-attachments/assets/2a90b052-1263-4b98-9005-4be88989b73f" />
+
+### Edit Customer Dialog Validation
+
+<img width="531" height="322" alt="image" src="https://github.com/user-attachments/assets/267c304a-18ec-4ea5-97ac-7d19c83ee0d4" />
+
+### Create Order Dialog
+
+<img width="420" height="532" alt="image" src="https://github.com/user-attachments/assets/cc15cad7-6251-4c0a-90c3-63fb8d4dd33f" />
+
+### Create Order Dialog Validation
+
+<img width="419" height="587" alt="image" src="https://github.com/user-attachments/assets/7649f9fc-3e90-485c-9c53-43da53ccec72" />
+
+
 ## Technology and architecture
 
 | Layer | Implementation |
