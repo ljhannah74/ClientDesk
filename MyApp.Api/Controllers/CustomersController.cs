@@ -36,8 +36,13 @@ public class CustomersController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Customer>> Create(Customer customer)
+    public async Task<ActionResult<Customer>> Create(CustomerRequest request)
     {
+        var customer = new Customer
+        {
+            Name = request.Name.Trim(),
+            Email = string.IsNullOrWhiteSpace(request.Email) ? null : request.Email.Trim()
+        };
         _context.Customers.Add(customer);
 
         await _context.SaveChangesAsync();
@@ -51,13 +56,8 @@ public class CustomersController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(
     int id,
-    Customer customer)
+    CustomerRequest request)
     {
-        if (id != customer.Id)
-        {
-            return BadRequest();
-        }
-
         var existingCustomer =
             await _context.Customers.FindAsync(id);
 
@@ -66,8 +66,8 @@ public class CustomersController : ControllerBase
             return NotFound();
         }
 
-        existingCustomer.Name = customer.Name;
-        existingCustomer.Email = customer.Email;
+        existingCustomer.Name = request.Name.Trim();
+        existingCustomer.Email = string.IsNullOrWhiteSpace(request.Email) ? null : request.Email.Trim();
 
         await _context.SaveChangesAsync();
 
