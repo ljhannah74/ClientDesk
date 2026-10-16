@@ -10,7 +10,7 @@ builder.Services.AddControllers()
             System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
     });
 var appDataPath =
-    Environment.GetEnvironmentVariable("APP_DATA_PATH");
+    builder.Configuration["APP_DATA_PATH"];
 
 if (string.IsNullOrWhiteSpace(appDataPath))
 {
@@ -57,3 +57,6 @@ app.UseCors("ReactApp");
 app.MapControllers();
 
 app.Run();
+
+// Expose the entry point to the integration-test host.
+public partial class Program { }
