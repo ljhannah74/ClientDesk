@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Customer } from "../types/Customer";
 
 interface CustomerDialogProps {
@@ -22,6 +22,7 @@ export default function CustomerDialog({
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [saving, setSaving] = useState(false);
+    const saveInProgress = useRef(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -38,13 +39,20 @@ export default function CustomerDialog({
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
+        if (saveInProgress.current) return;
 
         if (!name.trim()) {
             setError("Name is required.");
             return;
         }
 
+        if (name.trim().length > 100 || email.trim().length > 254) {
+            setError("Name must be 100 characters or fewer and email 254 characters or fewer.");
+            return;
+        }
+
         try {
+            saveInProgress.current = true;
             setSaving(true);
             setError(null);
 
@@ -54,16 +62,17 @@ export default function CustomerDialog({
             });
         } catch (err) {
             console.error(err);
-            setError("Unable to save customer.");
+            setError(err instanceof Error ? err.message : "Unable to save customer.");
         } finally {
+            saveInProgress.current = false;
             setSaving(false);
         }
     }
 
     return (
         <div className="dialog-backdrop">
-            <div className="dialog">
-                <h2>Add Customer</h2>
+            <div className="dialog" role="dialog" aria-modal="true" aria-labelledby="customer-dialog-title">
+                <h2 id="customer-dialog-title">{customer ? "Edit Customer" : "Add Customer"}</h2>
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-field">
@@ -74,6 +83,9 @@ export default function CustomerDialog({
                         <input
                             id="customer-name"
                             type="text"
+                            required
+                            maxLength={100}
+                            disabled={saving}
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             autoFocus
@@ -88,13 +100,15 @@ export default function CustomerDialog({
                         <input
                             id="customer-email"
                             type="email"
+                            maxLength={254}
+                            disabled={saving}
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
 
                     {error && (
-                        <div className="dialog-error">
+                        <div className="dialog-error" role="alert">
                             {error}
                         </div>
                     )}
