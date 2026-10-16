@@ -56,7 +56,7 @@ In browser development, React sends JSON requests to relative `/api` URLs. Vite 
 
 In Electron mode, the desktop process starts the API on an available local port and provides that URL to React through the preload bridge. Electron uses context isolation and disables Node integration in the renderer.
 
-## Repository structure
+## Repository structures
 
 - `MyApp.Api/Controllers/` — customer and order HTTP endpoints.
 - `MyApp.Api/Models/` — entities and validated request models.
