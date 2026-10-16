@@ -37,6 +37,7 @@ In Electron mode, the desktop process starts the API on an available local port 
 - `MyApp.Api/Models/` — entities and validated request models.
 - `MyApp.Api/Data/` — EF Core context and relationship configuration.
 - `MyApp.Api/Migrations/` — checked-in schema migrations.
+- `MyApp.Api.Tests/` — HTTP integration tests with isolated SQLite databases.
 - `myapp.client/src/pages/` — dashboard, customer directory, and orders.
 - `myapp.client/src/components/` — layout and customer/order dialogs.
 - `myapp.client/src/api/` — API initialization and HTTP calls.
@@ -189,10 +190,34 @@ Verification completed for the customer-validation update:
 - Frontend API checks passed error-message handling and successful retrieval.
 - Manual browser checks for customer validation, editing, deletion protection, and recovery from a failed save passed.
 
-The one-off API checks are not yet a committed automated test suite. No test command or GitHub Actions workflow is currently configured for this project.
+### Automated tests
+
+From the repository root:
+
+```powershell
+dotnet test .\MyApp.Api.Tests\MyApp.Api.Tests.csproj --configuration Release
+cd .\myapp.client
+npm ci
+npm test
+```
+
+Use `npm run test:watch` for interactive frontend test runs.
+
+The xUnit integration tests exercise the HTTP API, ASP.NET Core validation, migrations, and SQLite relationships using a fresh temporary database for each test case. They cover required fields, length/email constraints, normalization, invalid updates, server-managed IDs/relationships, duplicate order numbers, and deletion protection. Test hosts override `APP_DATA_PATH` without changing your environment or development database.
+
+Vitest and React Testing Library cover customer form headings, validation, trimmed submissions, save failures/retries, duplicate-save prevention, and customer API error handling. These use jsdom and mocked requests; they are not end-to-end browser or Electron tests.
+
+### GitHub Actions
+
+[![CI](https://github.com/ljhannah74/MyApp/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ljhannah74/MyApp/actions/workflows/ci.yml)
+
+CI runs on pull requests targeting `main`, pushes to `main`, and manual runs. Separate jobs build/test the .NET 10 API and test/build/lint React with Node.js 24. The workflow needs no secrets or database server. Jobs use read-only repository access, time limits, and cancellation of superseded runs.
+
+Inspect results under **Actions → CI** or the pull request's **Checks** tab. Lint warnings remain visible without failing the current configuration. Branch rules requiring successful checks are not configured by this workflow.
 
 ## Current limitations and next steps
 
 This is a local development and portfolio project. Authentication and authorization are not implemented; use fictional records.
 
-Next improvements are automated API/UI tests, GitHub Actions, screenshots from the running application, improved order error classification, and verified Electron packaging. Order database-update failures currently share a duplicate-order-number response, and concurrent changes need more robust handling.
+Next improvements are broader order UI and end-to-end tests, screenshots from the running application, improved order error classification, and verified Electron packaging. Order database-update failures currently share a duplicate-order-number response, and concurrent changes need more robust handling.
+
