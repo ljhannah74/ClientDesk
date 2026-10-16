@@ -65,7 +65,7 @@ export default function Customers() {
             setCustomers(data);
         } catch (err) {
             console.error(err);
-            setError("Unable to load customers.");
+            setError(err instanceof Error ? err.message : "Unable to load customers.");
         } finally {
             setLoading(false);
         }
@@ -129,7 +129,7 @@ export default function Customers() {
             );
 
             setDeleteError(
-                "Unable to delete customer."
+                error instanceof Error ? error.message : "Unable to delete customer."
             );
         } finally {
             setDeleting(false);
@@ -213,7 +213,7 @@ export default function Customers() {
                         </p>
 
                         {deleteError && (
-                            <div className="dialog-error">
+                            <div className="dialog-error" role="alert">
                                 {deleteError}
                             </div>
                         )}
