@@ -4,6 +4,10 @@ const path = require("path");
 const fs = require("fs");
 const net = require("net");
 
+// Keep existing packaged data accessible when the display name changes.
+app.setPath("userData", path.join(app.getPath("appData"), "MyApp"));
+app.setName("ClientDesk");
+
 app.commandLine.appendSwitch(
     "disable-features",
     "Vulkan"
@@ -161,6 +165,7 @@ async function waitForApi(apiUrl) {
 
 async function createWindow() {
     mainWindow = new BrowserWindow({
+        title: "ClientDesk",
         width: 1280,
         height: 800,
 
