@@ -16,9 +16,6 @@ app.commandLine.appendSwitch(
 let mainWindow;
 let apiProcess;
 
-const API_PORT = 5123;
-const API_URL = `http://127.0.0.1:${API_PORT}`;
-
 let apiUrl = null;
 
 function findAvailablePort() {
@@ -130,7 +127,7 @@ function startApi(apiUrl) {
         );
     });
 
-    apiProcess.on("exit", code => {
+    apiProcess.on("exit", () => {
         apiProcess = null;
     });
 }
