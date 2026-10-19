@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import type { Customer } from "../types/Customer";
 
 interface CustomerDialogProps {
-    open: boolean;
     customer?: Customer | null;
     onSave: (customer: Omit<Customer, "id">) => Promise<void>;
     onCancel: () => void;
@@ -14,28 +13,15 @@ export interface CustomerFormData {
 }
 
 export default function CustomerDialog({
-    open,
     customer,
     onSave,
     onCancel,
 }: CustomerDialogProps) {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
+    const [name, setName] = useState(customer?.name ?? "");
+    const [email, setEmail] = useState(customer?.email ?? "");
     const [saving, setSaving] = useState(false);
     const saveInProgress = useRef(false);
     const [error, setError] = useState<string | null>(null);
-
-    useEffect(() => {
-        if (open) {
-            setName(customer?.name ?? "");
-            setEmail(customer?.email ?? "");
-            setError(null);
-        }
-    }, [open, customer]);
-
-    if (!open) {
-        return null;
-    }
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
