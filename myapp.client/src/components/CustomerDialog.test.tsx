@@ -5,7 +5,7 @@ import CustomerDialog from "./CustomerDialog";
 
 describe("CustomerDialog", () => {
     it("uses the edit heading and existing customer values", () => {
-        render(<CustomerDialog open customer={{id: 7, name: "Alex Example", email: "alex@example.com"}}
+        render(<CustomerDialog customer={{id: 7, name: "Alex Example", email: "alex@example.com"}}
             onSave={vi.fn()} onCancel={vi.fn()} />);
         expect(screen.getByRole("heading", {name: "Edit Customer"})).toBeInTheDocument();
         expect(screen.getByLabelText("Name")).toHaveValue("Alex Example");
@@ -13,7 +13,7 @@ describe("CustomerDialog", () => {
 
     it("rejects whitespace-only names", async () => {
         const save = vi.fn();
-        render(<CustomerDialog open onSave={save} onCancel={vi.fn()} />);
+        render(<CustomerDialog onSave={save} onCancel={vi.fn()} />);
         await userEvent.type(screen.getByLabelText("Name"), "   ");
         await userEvent.click(screen.getByRole("button", {name: "Save"}));
         expect(screen.getByRole("alert")).toHaveTextContent("Name is required.");
@@ -22,7 +22,7 @@ describe("CustomerDialog", () => {
 
     it("submits trimmed values", async () => {
         const save = vi.fn().mockResolvedValue(undefined);
-        render(<CustomerDialog open onSave={save} onCancel={vi.fn()} />);
+        render(<CustomerDialog onSave={save} onCancel={vi.fn()} />);
         await userEvent.type(screen.getByLabelText("Name"), "  Alex Example  ");
         await userEvent.type(screen.getByLabelText("Email"), "alex@example.com");
         await userEvent.click(screen.getByRole("button", {name: "Save"}));
@@ -32,7 +32,7 @@ describe("CustomerDialog", () => {
     it("retains input and permits retry after a failed save", async () => {
         vi.spyOn(console, "error").mockImplementation(() => {});
         const save = vi.fn().mockRejectedValueOnce(new Error("Connection unavailable.")).mockResolvedValue(undefined);
-        render(<CustomerDialog open onSave={save} onCancel={vi.fn()} />);
+        render(<CustomerDialog onSave={save} onCancel={vi.fn()} />);
         await userEvent.type(screen.getByLabelText("Name"), "Alex Example");
         await userEvent.click(screen.getByRole("button", {name: "Save"}));
         expect(await screen.findByRole("alert")).toHaveTextContent("Connection unavailable.");
@@ -44,7 +44,7 @@ describe("CustomerDialog", () => {
     it("blocks duplicate submissions while saving", async () => {
         let resolve!: () => void;
         const save = vi.fn(() => new Promise<void>(done => { resolve = done; }));
-        render(<CustomerDialog open onSave={save} onCancel={vi.fn()} />);
+        render(<CustomerDialog onSave={save} onCancel={vi.fn()} />);
         await userEvent.type(screen.getByLabelText("Name"), "Alex Example");
         const form = screen.getByLabelText("Name").closest("form")!;
         fireEvent.submit(form);
@@ -55,4 +55,21 @@ describe("CustomerDialog", () => {
         await act(async () => resolve());
         expect(screen.getByRole("button", {name: "Save"})).toBeEnabled();
     });
+    it("starts with fresh values when reopened", async () => {
+        const save = vi.fn().mockResolvedValue(undefined);
+        const { rerender } = render(<CustomerDialog onSave={save} onCancel={vi.fn()} />);
+        await userEvent.type(screen.getByLabelText("Name"), "Unsaved text");
+        rerender(<></>);
+        rerender(<CustomerDialog onSave={save} onCancel={vi.fn()} />);
+        expect(screen.getByLabelText("Name")).toHaveValue("");
+    });
+
+    it("loads a different customer when the dialog key changes", () => {
+        const save = vi.fn().mockResolvedValue(undefined);
+        const { rerender } = render(<CustomerDialog key={7} customer={{id: 7, name: "Alex Example", email: "alex@example.com"}} onSave={save} onCancel={vi.fn()} />);
+        rerender(<CustomerDialog key={8} customer={{id: 8, name: "Jordan Example", email: "jordan@example.com"}} onSave={save} onCancel={vi.fn()} />);
+        expect(screen.getByLabelText("Name")).toHaveValue("Jordan Example");
+        expect(screen.getByLabelText("Email")).toHaveValue("jordan@example.com");
+    });
+
 });
