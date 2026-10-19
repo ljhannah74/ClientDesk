@@ -182,19 +182,20 @@ export default function Customers() {
                     />
                 </div>
             )}
-            <CustomerDialog
-                open={addDialogOpen}
-                onSave={handleAddCustomer}
-                onCancel={() => setAddDialogOpen(false)}
-            />
-            <CustomerDialog
-                open={editDialogOpen}
-                customer={selectedCustomer}
-                onSave={handleEditCustomer}
-                onCancel={() =>
-                    setEditDialogOpen(false)
-                }
-            />
+            {addDialogOpen && (
+                <CustomerDialog
+                    onSave={handleAddCustomer}
+                    onCancel={() => setAddDialogOpen(false)}
+                />
+            )}
+            {editDialogOpen && selectedCustomer && (
+                <CustomerDialog
+                    key={selectedCustomer.id}
+                    customer={selectedCustomer}
+                    onSave={handleEditCustomer}
+                    onCancel={() => setEditDialogOpen(false)}
+                />
+            )}
             {deleteDialogOpen && selectedCustomer && (
                 <div className="dialog-backdrop">
                     <div className="dialog">
