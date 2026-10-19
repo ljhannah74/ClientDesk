@@ -2,7 +2,7 @@
 
 A full-stack customer and order management application built with React, TypeScript, ASP.NET Core, and SQLite. The project demonstrates relational business workflows, API integration, validation, and recovery from failed requests.
 
-ClientDesk manages customers and their orders in a React interface backed by a C# API. Internal project names and the repository URL still use **MyApp**.
+ClientDesk manages customers and their orders in a React interface backed by a C# API. Some internal project names retain the original MyApp naming for compatibility. The public repository and application branding use ClientDesk.
 
 ## Features
 
@@ -80,8 +80,8 @@ In Electron mode, the desktop process starts the API on an available local port 
 Clone the repository:
 
 ```powershell
-git clone https://github.com/ljhannah74/MyApp.git
-cd MyApp
+git clone https://github.com/ljhannah74/ClientDesk.git
+cd ClientDesk
 ```
 
 ### 1. Start the API
@@ -236,7 +236,7 @@ Vitest and React Testing Library cover customer form headings, validation, trimm
 
 ### GitHub Actions
 
-[![CI](https://github.com/ljhannah74/MyApp/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ljhannah74/MyApp/actions/workflows/ci.yml)
+[![CI](https://github.com/ljhannah74/ClientDesk/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ljhannah74/ClientDesk/actions/workflows/ci.yml)
 
 CI runs on pull requests targeting `main`, pushes to `main`, and manual runs. Separate jobs build/test the .NET 10 API and test/build/lint React with Node.js 24. The workflow needs no secrets or database server. Jobs use read-only repository access, time limits, and cancellation of superseded runs.
 
