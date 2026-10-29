@@ -182,3 +182,61 @@
     border-right-color: var(--border);
   }
 }
+
+/* Product dialog */
+
+.dialog .product-form-grid {
+    display: grid;
+    grid-template-columns: 130px minmax(0, 1fr);
+    column-gap: 16px;
+    row-gap: 14px;
+    align-items: center;
+    width: 100%;
+}
+
+.dialog .product-form-grid > label {
+    display: block;
+    width: auto;
+    margin: 0;
+    text-align: right;
+    font-weight: 500;
+}
+
+.dialog .product-form-grid > input,
+.dialog .product-form-grid > textarea {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    font: inherit;
+}
+
+.dialog .product-form-grid > textarea {
+    resize: vertical;
+}
+
+.dialog .product-active-field {
+    display: flex;
+    align-items: center;
+}
+
+.dialog .product-active-field input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+}
+
+.dialog:has(.product-form-grid) {
+    width: 520px;
+    max-width: calc(100vw - 40px);
+    box-sizing: border-box;
+}
+
+.dialog:has(.product-form-grid) .dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 24px;
+}

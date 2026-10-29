@@ -144,24 +144,26 @@ export default function Customers() {
                     <p>Manage your customers.</p>
                 </div>
 
-                <button type="button"
-                    onClick={() => setAddDialogOpen(true)}
-                >
-                    Add
-                </button>
+                <div className="page-actions">
+                    <button type="button"
+                        onClick={() => setAddDialogOpen(true)}
+                    >
+                        Add
+                    </button>
 
-                <button type="button" disabled={!selectedCustomer}
-                    onClick={() => setEditDialogOpen(true)}>
-                    Edit
-                </button>
+                    <button type="button" disabled={!selectedCustomer}
+                        onClick={() => setEditDialogOpen(true)}>
+                        Edit
+                    </button>
 
-                <button type="button" disabled={!selectedCustomer}
-                    onClick={() => {
-                        setDeleteError(null);
-                        setDeleteDialogOpen(true);
-                    }}>
-                    Delete
-                </button>
+                    <button type="button" disabled={!selectedCustomer}
+                        onClick={() => {
+                            setDeleteError(null);
+                            setDeleteDialogOpen(true);
+                        }}>
+                        Delete
+                    </button>
+                </div>
             </div>
 
             {error && (
