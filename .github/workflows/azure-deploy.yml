@@ -1,0 +1,87 @@
+name: Deploy ClientDesk to Azure
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: clientdesk-azure-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: myapp.client/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: myapp.client
+        run: npm ci --no-audit --no-fund
+
+      - name: Test frontend
+        working-directory: myapp.client
+        run: npm test
+
+      - name: Lint frontend
+        working-directory: myapp.client
+        run: npm run lint
+
+      - name: Build frontend
+        working-directory: myapp.client
+        run: npm run build
+
+      - name: Test API
+        run: >
+          dotnet test MyApp.Api.Tests/MyApp.Api.Tests.csproj
+          --configuration Release
+
+      - name: Publish API
+        run: >
+          dotnet publish MyApp.Api/MyApp.Api.csproj
+          --configuration Release
+          --output ./publish
+
+      - name: Include React application
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path ./publish/wwwroot | Out-Null
+          Copy-Item -Path ./myapp.client/dist/* -Destination ./publish/wwwroot -Recurse -Force
+
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_673532FD44E7416AB7B3F2C4DF35DA0B }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_4200DEC3035542248B5E0F12C11C09AB }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_610325E237DD475A88B83F8C9ED01EE3 }}
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: clientdesk-ljhannah
+          package: ./publish
