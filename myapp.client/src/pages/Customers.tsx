@@ -5,6 +5,7 @@ import CustomerDialog, { type CustomerFormData } from "../components/CustomerDia
 
 import { createCustomer, getCustomers, updateCustomer, deleteCustomer } from "../api/customersApi";
 import type { Customer } from "../types/Customer";
+import { isReadOnlyDemo } from "../demo";
 
 export default function Customers() {
     const [customers, setCustomers] = useState<Customer[]>([]);
@@ -146,12 +147,14 @@ export default function Customers() {
 
                 <div className="page-actions">
                     <button type="button"
+                        disabled={isReadOnlyDemo}
                         onClick={() => setAddDialogOpen(true)}
                     >
                         Add
                     </button>
 
-                    <button type="button" disabled={!selectedCustomer}
+                    <button type="button"
+                        disabled={isReadOnlyDemo || !selectedCustomer}
                         onClick={() => setEditDialogOpen(true)}>
                         Edit
                     </button>

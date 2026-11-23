@@ -240,3 +240,17 @@
     gap: 8px;
     margin-top: 24px;
 }
+
+.demo-banner {
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid #93c5fd;
+    border-radius: 6px;
+    background: #eff6ff;
+    color: #1e3a8a;
+}
+
+.page-actions button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}

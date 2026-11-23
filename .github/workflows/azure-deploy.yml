@@ -54,6 +54,8 @@ jobs:
 
       - name: Build frontend
         working-directory: myapp.client
+        env:
+          VITE_DEMO_READ_ONLY: 'true'
         run: npm run build
 
       - name: Test API
