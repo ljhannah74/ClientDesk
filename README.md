@@ -4,6 +4,20 @@ A full-stack customer and order management application built with React, TypeScr
 
 ClientDesk manages customers and their orders in a React interface backed by a C# API. Some internal project names retain the original MyApp naming for compatibility. The public repository and application branding use ClientDesk.
 
+## Live demo
+
+[Try ClientDesk on Azure](https://clientdesk-ljhannah-dhbahsezdxdpg2bg.westus3-01.azurewebsites.net/)
+
+Explore fictional customer and order data in a read-only demo.
+Sorting, filtering, and navigation are available; adding, editing,
+and deleting are disabled.
+
+Hosted on Azure App Service with Azure SQL and managed identity
+authentication. GitHub Actions tests, builds, and deploys the React
+interface and ASP.NET Core API after changes merge into main.
+
+The free hosting services may take time to wake after inactivity.
+
 ## Features
 
 - Create, edit, list, and delete customers.

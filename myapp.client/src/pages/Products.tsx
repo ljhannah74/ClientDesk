@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { AgGridReact } from "ag-grid-react";
+import { isReadOnlyDemo } from "../demo";
 
 import type {
     ColDef,
@@ -118,7 +119,9 @@ export default function Products() {
                 </div>
 
             <div className="page-actions">
-                <button type="button" onClick={() => setAddDialogOpen(true)}>
+                <button type="button"
+                    disabled={isReadOnlyDemo}
+                    onClick={() => setAddDialogOpen(true)}>
                     Add
                 </button>
 

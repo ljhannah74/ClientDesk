@@ -10,6 +10,7 @@ import { createOrder, deleteOrder, getOrders, updateOrder } from "../api/ordersA
 import { getCustomers } from "../api/customersApi";
 import type { Customer } from "../types/Customer";
 import type { Order, OrderRequest } from "../types/Order";
+import { isReadOnlyDemo } from "../demo";
 
 export default function Orders() {
     const [orders, setOrders] = useState<Order[]>([]);
@@ -141,14 +142,14 @@ export default function Orders() {
                     <button
                         type="button"
                         onClick={() => setAddDialogOpen(true)}
-                        disabled={loading || customers.length === 0}
+                        disabled={isReadOnlyDemo || loading || customers.length === 0}
                         title={customers.length === 0 ? "Add a customer first" : undefined}
                     >
                         Add
                     </button>
                     <button
                         type="button"
-                        disabled={!selectedOrder}
+                        disabled={!selectedOrder || isReadOnlyDemo}
                         onClick={() => setEditDialogOpen(true)}
                     >
                         Edit
